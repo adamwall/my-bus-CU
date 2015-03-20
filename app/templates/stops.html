@@ -1,0 +1,15 @@
+<ion-view view-title="Stops">
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="text" placeholder="Search" ng-model="query.stop_name">
+      </label>
+    </div>
+    <ion-list>
+      <ion-item ng-repeat="stop in stops | filter:query" href="#/app/stop/{{stop.stop_id}}">
+        {{stop.stop_name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
