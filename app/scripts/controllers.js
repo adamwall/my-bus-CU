@@ -47,6 +47,16 @@ angular.module('starter.controllers', [])
   .controller('StopsCtrl', function($scope, $http) {
     $http.get('stops/GetStops.json').success(function(data) {
       $scope.stops = data.stops;
+      console.log(data.stops.length);
+    });
+  })
+
+  .controller('StopCtrl', function($scope, $http, $stateParams) {
+    $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+      $scope.departures = data.departures;
+      console.log(data.departures);
+    }).error(function() {
+      console.log('not found');
     });
   })
 

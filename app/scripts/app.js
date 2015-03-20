@@ -67,6 +67,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       })
 
+      .state('app.stop', {
+        url: "/stops/:stopId",
+        views: {
+          'menuContent': {
+            templateUrl: "templates/stop.html",
+            controller: 'StopCtrl'
+          }
+        }
+      })
+
       .state('app.single', {
         url: "/playlists/:playlistId",
         views: {

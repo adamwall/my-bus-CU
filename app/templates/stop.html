@@ -1,0 +1,9 @@
+<ion-view view-title="Stop">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="departure in departures">
+        {{departure.headsign}} in {{departure.expected_mins}} min(s)
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
