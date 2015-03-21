@@ -1,5 +1,8 @@
-<ion-view view-title="Stop">
+<ion-view view-title="Stop" data-ng-init="updateDepartures()">
   <ion-content>
+    <button class="button button-full button-positive" ng-click="updateDepartures()">
+      Update
+    </button>
     <ion-list>
       <ion-item ng-repeat="departure in departures">
         {{departure.headsign}} in {{departure.expected_mins}} min(s)

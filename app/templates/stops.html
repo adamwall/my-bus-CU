@@ -3,12 +3,12 @@
     <div class="list list-inset">
       <label class="item item-input">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" placeholder="Search" ng-model="query.stop_name">
+        <input type="text" placeholder="Search" ng-model="query">
       </label>
     </div>
     <ion-list>
-      <ion-item ng-repeat="stop in stops | filter:query" href="#/app/stops/{{stop.stop_id}}">
-        {{stop.stop_name}}
+      <ion-item ng-repeat="stop in stops" href="#/app/stops/{{stop.i}}">
+        {{stop.n}}
       </ion-item>
     </ion-list>
   </ion-content>

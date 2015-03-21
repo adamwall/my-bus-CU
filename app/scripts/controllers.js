@@ -1,5 +1,4 @@
 angular.module('starter.controllers', [])
-
   .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
     // Form data for the login modal
     $scope.loginData = {};
@@ -45,18 +44,33 @@ angular.module('starter.controllers', [])
   })
 
   .controller('StopsCtrl', function($scope, $http) {
-    $http.get('stops/GetStops.json').success(function(data) {
-      $scope.stops = data.stops;
-      console.log(data.stops.length);
+    $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=green').success(function (data){
+      $scope.stops = data;
     });
   })
 
-  .controller('StopCtrl', function($scope, $http, $stateParams) {
-    $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
-      $scope.departures = data.departures;
-      console.log(data.departures);
-    }).error(function() {
-      console.log('not found');
+  .controller('StopCtrl', function($scope, $http, $stateParams, $interval) {
+    $scope.updateDepartures = function() {
+      $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        $scope.departures = data.departures;
+      });
+    };
+
+    //refresh departure list every 60 seconds
+    $interval(function() {
+      $scope.updateDepartures();
+    }, 60000)
+
+    $scope.stopUpdate = function() {
+      if (angular.isDefined(stop)) {
+        $interval.cancel(stop);
+        stop = undefined;
+      }
+    };
+
+    $scope.$on('$destroy', function() {
+      // Make sure that the interval is destroyed too
+      $scope.stopUpdate();
     });
   })
 
