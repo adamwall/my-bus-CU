@@ -1,4 +1,4 @@
-<ion-view view-title="{{stop.stop_name}}" data-ng-init="getStopAndDepartures()">
+<ion-view view-title="{{stop_name}}" data-ng-init="getStopAndDepartures()">
   <ion-nav-buttons side="right">
     <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="stopInfo()">Buses to this Route</a>
   </ion-nav-buttons>
@@ -7,19 +7,25 @@
       pulling-text="Pull to refresh..."
       on-refresh="doRefresh()">
     </ion-refresher>
+
     <ion-list>
-      <ion-item ng-repeat="departure in departures" href="#/app/buses/{{departure.route.route_id}}">
-        <h2>{{departure.headsign}}</h2>
-        <p><small>{{departure.expected_mins}}</small></p>
-      </ion-item>
+      <div ng-repeat="team in teams">
+        <ion-item class="item-stable"
+                  ng-click="toggleGroup(team)"
+                  ng-class="{active: isGroupShown(team)}">
+          <i class="icon" ng-class="isGroupShown(team) ? 'ion-minus' : 'ion-plus'"></i>
+          &nbsp;
+          {{team}}
+        </ion-item>
+        <ion-item class="item-accordion"
+                  ng-repeat="departure in departures | filter: {stop_id: team}"
+                  ng-show="isGroupShown(team)"
+                  href="#/app/buses/{{departure.route.route_id}}">
+          <h2>{{departure.headsign}}</h2>
+          <p><small>{{departure.expected_mins}}</small></p>
+        </ion-item>
+      </div>
     </ion-list>
+
   </ion-content>
 </ion-view>
-
-<script id="#/app/buses/{{departure.route.route_id}}" type="text/ng-template">
-  <ion-view view-title="{{stop.stop_name}}">
-    <ion-content>
-      a
-    </ion-content>
-  </ion-view>
-</script>

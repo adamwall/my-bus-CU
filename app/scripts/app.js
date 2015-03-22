@@ -68,7 +68,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       })
 
       .state('app.stop', {
-        url: "/stops/:stopId",
+        url: "/stops/:stopId?stopName",
         views: {
           'menuContent': {
             templateUrl: "templates/stop.html",

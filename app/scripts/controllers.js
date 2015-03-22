@@ -52,7 +52,23 @@ angular.module('starter.controllers', [])
     };
   })
 
+  //-------------------STOP CONTROLLER BEGIN-----------------------------------------------------------
   .controller('StopCtrl', function($scope, $http, $stateParams, $interval, $ionicModal) {
+
+    $scope.showngroups={};
+    $scope.stop_name = $stateParams.stopName;
+    /*
+     * if given group is the selected group, deselect it
+     * else, select the given group
+     */
+    $scope.toggleGroup = function(group) {
+      $scope.showngroups[group] = !$scope.showngroups[group];
+      console.log($scope.showngroups);
+    };
+    $scope.isGroupShown = function(group) {
+      return $scope.showngroups[group];
+    };
+
 
     //load page for modal
     $ionicModal.fromTemplateUrl('templates/stopinfo.html', {
@@ -77,20 +93,20 @@ angular.module('starter.controllers', [])
           route.route_text_color = '#'+route.route_text_color;
           route.route_color = '#'+ route.route_color;
         });
-        console.log(data);
         $scope.buses = data.routes;
       });
     };
 
     //only gets called once at the start of the page
     $scope.getStopAndDepartures = function() {
-      $scope.updateDepartures();
       $scope.getStopInfo();
+      $scope.updateDepartures();
     };
 
     $scope.getStopInfo = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
         $scope.stop = data.stops[0];
+        console.log(data.stops[0]);
       });
     };
 
@@ -102,8 +118,22 @@ angular.module('starter.controllers', [])
         });
         console.log(data.departures);
         $scope.departures = data.departures;
+        $scope.teams = unique($scope.departures, 'stop_id');
+        console.log($scope.teams[0]);
+        console.log($scope.stop.stop_points);
       });
     };
+
+    function unique(data, key) {
+      var result = [];
+      for (var i = 0; i < data.length; i++) {
+        var value = data[i][key];
+        if (result.indexOf(value) == -1) {
+          result.push(value);
+        }
+      }
+      return result;
+    }
 
     $scope.doRefresh = function(){
       $scope.updateDepartures();
@@ -123,9 +153,9 @@ angular.module('starter.controllers', [])
     $scope.$on('$destroy', function() {
       // Make sure that the interval is destroyed too
       $scope.stopUpdate();
-      console.log('aaa');
     });
   })
+//-------------------STOP CONTROLLER END---------------------------------------------------------------
 
   .controller('PlaylistCtrl', function($scope, $stateParams) {
   });

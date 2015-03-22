@@ -7,7 +7,7 @@
       </label>
     </div>
     <ion-list>
-      <ion-item ng-repeat="stop in stops" href="#/app/stops/{{stop.i}}">
+      <ion-item ng-repeat="stop in stops" href="#/app/stops/{{stop.i}}?stopName={{stop.n}}">
         {{stop.n}}
       </ion-item>
     </ion-list>
