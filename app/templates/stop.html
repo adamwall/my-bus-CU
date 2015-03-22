@@ -1,11 +1,16 @@
-<ion-view view-title="Stop" data-ng-init="updateDepartures()">
+<ion-view view-title="Stop" data-ng-init="getStopAndDepartures()">
+  <ion-nav-buttons side="right">
+    <a class="button icon-left ion-information-circled button-clear button-dark">Get Stop Info</a>
+  </ion-nav-buttons>
   <ion-content>
-    <button class="button button-full button-positive" ng-click="updateDepartures()">
-      Update
-    </button>
+    <ion-refresher
+      pulling-text="Pull to refresh..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
     <ion-list>
-      <ion-item ng-repeat="departure in departures">
-        {{departure.headsign}} in {{departure.expected_mins}} min(s)
+      <ion-item ng-repeat="departure in departures" href="#/app/buses/{{departure.route.route_id}}">
+        <h2>{{departure.headsign}}</h2>
+        <p><small>{{departure.expected_mins}}</small></p>
       </ion-item>
     </ion-list>
   </ion-content>
