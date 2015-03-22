@@ -1,5 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
+  <ion-side-menu-content drag-content="false">
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
@@ -18,17 +18,25 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close href="#/app/stops">
-          bus stops
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/stops">
+          <i class="icon ion-search"></i>
+          Bus Stop Search
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/search">
-          Search
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/search">
+          <i class="icon ion-heart"></i>
+          Favorites
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/browse">
-          Browse
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/browse">
+          <i class="icon ion-location"></i>
+          Get Nearest Bus Stops
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/playlists">
-          Playlists
+          <i class="icon ion-ios-cloud"></i>
+          Should I Walk or Ride?
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/browse">
+          <i class="icon ion-gear-b"></i>
+          Settings
         </ion-item>
       </ion-list>
     </ion-content>
