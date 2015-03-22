@@ -44,33 +44,54 @@ angular.module('starter.controllers', [])
   })
 
   .controller('StopsCtrl', function($scope, $http) {
-    $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=green').success(function (data){
-      $scope.stops = data;
-    });
+
+    $scope.search = function(query){
+      $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=' + query).success(function (data){
+        $scope.stops = data;
+      });
+    };
   })
 
   .controller('StopCtrl', function($scope, $http, $stateParams, $interval) {
+    //only gets called once at the start of the page
+    $scope.getStopAndDepartures = function() {
+      $scope.updateDepartures();
+    };
+
+    $scope.getStopInfo = function() {
+
+    }
+
     $scope.updateDepartures = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        angular.forEach(data.departures, function(departure) {
+          if(departure.expected_mins == 0) departure.expected_mins = 'DUE';
+          else departure.expected_mins = departure.expected_mins + ' minutes';
+        });
+        console.log(data.departures);
         $scope.departures = data.departures;
       });
     };
 
+    $scope.doRefresh = function(){
+      $scope.updateDepartures();
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+
     //refresh departure list every 60 seconds
-    $interval(function() {
+    var intervalPromise = $interval(function() {
       $scope.updateDepartures();
     }, 60000)
 
     $scope.stopUpdate = function() {
-      if (angular.isDefined(stop)) {
-        $interval.cancel(stop);
-        stop = undefined;
-      }
+        $interval.cancel(intervalPromise);
     };
 
+    //destroy interval on close
     $scope.$on('$destroy', function() {
       // Make sure that the interval is destroyed too
       $scope.stopUpdate();
+      console.log('aaa');
     });
   })
 
