@@ -1,6 +1,6 @@
-<ion-view view-title="Stop" data-ng-init="getStopAndDepartures()">
+<ion-view view-title="{{stop.stop_name}}" data-ng-init="getStopAndDepartures()">
   <ion-nav-buttons side="right">
-    <a class="button icon-left ion-information-circled button-clear button-dark">Get Stop Info</a>
+    <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="stopInfo()">Buses to this Route</a>
   </ion-nav-buttons>
   <ion-content>
     <ion-refresher
@@ -15,3 +15,11 @@
     </ion-list>
   </ion-content>
 </ion-view>
+
+<script id="#/app/buses/{{departure.route.route_id}}" type="text/ng-template">
+  <ion-view view-title="{{stop.stop_name}}">
+    <ion-content>
+      a
+    </ion-content>
+  </ion-view>
+</script>

@@ -52,15 +52,47 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('StopCtrl', function($scope, $http, $stateParams, $interval) {
+  .controller('StopCtrl', function($scope, $http, $stateParams, $interval, $ionicModal) {
+
+    //load page for modal
+    $ionicModal.fromTemplateUrl('templates/stopinfo.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
+
+    //opens the modal
+    $scope.stopInfo = function() {
+      $scope.modal.show();
+    };
+
+    //close the modal
+    $scope.closeStopInfo = function() {
+      $scope.modal.hide();
+    };
+
+    $scope.getBusesByRoute = function() {
+      $http.get('https://developer.cumtd.com/api/v2.2/json/GetRoutesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        angular.forEach(data.routes, function(route){
+          route.route_text_color = '#'+route.route_text_color;
+          route.route_color = '#'+ route.route_color;
+        });
+        console.log(data);
+        $scope.buses = data.routes;
+      });
+    };
+
     //only gets called once at the start of the page
     $scope.getStopAndDepartures = function() {
       $scope.updateDepartures();
+      $scope.getStopInfo();
     };
 
     $scope.getStopInfo = function() {
-
-    }
+      $http.get('https://developer.cumtd.com/api/v2.2/json/GetStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        $scope.stop = data.stops[0];
+      });
+    };
 
     $scope.updateDepartures = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
