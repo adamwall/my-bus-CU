@@ -10,16 +10,16 @@
 
     <ion-list>
       <div ng-repeat="team in teams">
-        <ion-item class="item-stable"
+        <ion-item class="item-stable "
                   ng-click="toggleGroup(team)"
-                  ng-class="{active: isGroupShown(team)}">
-          <i class="icon" ng-class="isGroupShown(team) ? 'ion-minus' : 'ion-plus'"></i>
+                  ng-class="{active: !isGroupShown(team)}">
+          <i class="icon" ng-class="!isGroupShown(team) ? 'ion-minus' : 'ion-plus'"></i>
           &nbsp;
-          {{team}}
+          <span ng-bind="getStopName(team)"></span>
         </ion-item>
         <ion-item class="item-accordion"
                   ng-repeat="departure in departures | filter: {stop_id: team}"
-                  ng-show="isGroupShown(team)"
+                  ng-show="!isGroupShown(team)"
                   href="#/app/buses/{{departure.route.route_id}}">
           <h2>{{departure.headsign}}</h2>
           <p><small>{{departure.expected_mins}}</small></p>

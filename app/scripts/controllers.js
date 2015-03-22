@@ -106,7 +106,6 @@ angular.module('starter.controllers', [])
     $scope.getStopInfo = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
         $scope.stop = data.stops[0];
-        console.log(data.stops[0]);
       });
     };
 
@@ -116,12 +115,17 @@ angular.module('starter.controllers', [])
           if(departure.expected_mins == 0) departure.expected_mins = 'DUE';
           else departure.expected_mins = departure.expected_mins + ' minutes';
         });
-        console.log(data.departures);
         $scope.departures = data.departures;
         $scope.teams = unique($scope.departures, 'stop_id');
-        console.log($scope.teams[0]);
-        console.log($scope.stop.stop_points);
       });
+    };
+
+    $scope.getStopName = function(stop_id){
+      for(var i=0; i <$scope.stop.stop_points.length; i++){
+        if($scope.stop.stop_points[i].stop_id == stop_id){
+          return $scope.stop.stop_points[i].stop_name;
+        }
+      }
     };
 
     function unique(data, key) {
