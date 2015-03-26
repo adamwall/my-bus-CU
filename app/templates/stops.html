@@ -1,4 +1,4 @@
-<ion-view view-title="Stops">
+<ion-view view-title="Stops" data-ng-init="getFavorites()">
   <ion-content>
     <div class="bar bar-header item-input-inset">
       <label class="item-input-wrapper">
@@ -7,9 +7,19 @@
       </label>
     </div>
     <ion-list>
-      <ion-item ng-repeat="stop in stops" href="#/app/stops/{{stop.i}}?stopName={{stop.n}}">
+      <a class="item item-button-right" href="#/app/stops/GRNMAT?stopName=Green%20and%20Mathews">
+        Call Ma
+        <button class="button button-positive" ng-click="test = 'aaeee'">
+          <i class="icon ion-ios7-telephone"></i>
+        </button>
+      </a>
+      <ion-item class="item-icon-right" ng-repeat="stop in stops" href="#/app/stops/{{stop.i}}?stopName={{stop.n}}">
         {{stop.n}}
+        <ion-option-button class="button-positive icon-left ion-heart" ng-click="favorite(stop)" ng-show="functiontofindIndexByKeyValue(favorites,'i', stop.i) == -1">Favorite</ion-option-button>
+        <ion-option-button class="button-assertive icon-left ion-heart-broken" ng-click="unfavorite(stop)" ng-show="functiontofindIndexByKeyValue(favorites,'i', stop.i) > -1">Unfavorite</ion-option-button>
       </ion-item>
     </ion-list>
+    <button class="button button-positive" ng-click="getFavorites()">click</button>
+    aa<span ng-bind="test"></span>
   </ion-content>
 </ion-view>

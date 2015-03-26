@@ -10,7 +10,7 @@
       <div class="item item-divider">
         Buses that serve this stop
       </div>
-    <ion-list class="list-group ion-android-list">
+    <ion-list class="list-group">
       <ion-item ng-repeat="bus in buses | orderBy: 'route_long_name'" style="background-color:{{bus.route_color}};color:{{bus.route_text_color}};border-color:{{bus.route_color}};border-radius:2px">{{bus.route_short_name}} {{bus.route_long_name}}</ion-item>
     </ion-list>
       </div>

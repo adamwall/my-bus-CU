@@ -1,4 +1,5 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngCordova'])
+
   .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
     // Form data for the login modal
     $scope.loginData = {};
@@ -34,7 +35,7 @@ angular.module('starter.controllers', [])
 
   .controller('PlaylistsCtrl', function($scope) {
     $scope.playlists = [
-      { title: 'Reggae', id: 1 },
+      { title: 'R', id: 1 },
       { title: 'Chill', id: 2 },
       { title: 'Dubstep', id: 3 },
       { title: 'Indie', id: 4 },
@@ -43,12 +44,62 @@ angular.module('starter.controllers', [])
     ];
   })
 
-  .controller('StopsCtrl', function($scope, $http) {
-
+  .controller('StopsCtrl', function($scope, $http, $cordovaFile) {
+    $scope.stops = [{"c":"MTD5415","i":"GRNMAT","n":"Green and Mathews"},{"c":"MTD4360","i":"GRNGWN","n":"Green and Goodwin"},{"c":"MTD3336","i":"GRNNEIL","n":"Green and Neil"},{"c":"MTD3617","i":"GRNORCH","n":"Green and Orchard"}];
     $scope.search = function(query){
       $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=' + query).success(function (data){
         $scope.stops = data;
+      })
+    };
+
+    $scope.favorite = function(item){
+      $scope.favorites.push(
+        {'c': item.c,
+        'i': item.i,
+        'n': item.n}
+      );
+      writeToDisk();
+    };
+    $scope.unfavorite = function(item){
+      $scope.favorites.splice($scope.functiontofindIndexByKeyValue($scope.favorites,'i', item.i),1);
+      writeToDisk();
+    };
+
+    $scope.functiontofindIndexByKeyValue = function(arraytosearch, key, valuetosearch) {
+      for (var i = 0; i < arraytosearch.length; i++) {
+
+        if (arraytosearch[i][key] == valuetosearch) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+    function writeToDisk(){
+      $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
+        //success
+        $scope.test='worked11';
+      }, function(err) {
+        $scope.test = 'notworked1 ' + JSON.stringify(err);
+        // An error occurred. Show a message to the user
       });
+    }
+
+    $scope.getFavorites = function(){
+      $cordovaFile.checkFile('favorites.txt')
+        .then(function (success) {
+          $cordovaFile.readAsText('favorites.txt').then(function(result) {
+            $scope.test= result;
+            $scope.favorites = JSON.parse(result);
+          }, function(err) {
+            $scope.test = 'notworked1 ' + JSON.stringify(err);
+            $scope.favorites = [];
+          });
+        }, function (error) {
+          $scope.test = 'notworked001 ' + JSON.stringify(error);
+          $scope.favorites=[];
+        });
+
     };
   })
 
@@ -89,6 +140,7 @@ angular.module('starter.controllers', [])
 
     $scope.getBusesByRoute = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetRoutesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        console.log('GetRoutesByStop');
         angular.forEach(data.routes, function(route){
           route.route_text_color = '#'+route.route_text_color;
           route.route_color = '#'+ route.route_color;
@@ -105,12 +157,14 @@ angular.module('starter.controllers', [])
 
     $scope.getStopInfo = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        console.log('GetStop');
         $scope.stop = data.stops[0];
       });
     };
 
     $scope.updateDepartures = function() {
       $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+        console.log('GetDeparturesByStop');
         angular.forEach(data.departures, function(departure) {
           if(departure.expected_mins == 0) departure.expected_mins = 'DUE';
           else departure.expected_mins = departure.expected_mins + ' minutes';
