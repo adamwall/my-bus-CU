@@ -58,6 +58,7 @@ angular.module('starter.controllers', ['ngCordova'])
         'i': item.i,
         'n': item.n}
       );
+      $scope.test=JSON.stringify($scope.favorites);
       writeToDisk();
     };
     $scope.unfavorite = function(item){
@@ -78,7 +79,6 @@ angular.module('starter.controllers', ['ngCordova'])
     function writeToDisk(){
       $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
         //success
-        $scope.test='worked11';
       }, function(err) {
         $scope.test = 'notworked1 ' + JSON.stringify(err);
         // An error occurred. Show a message to the user
@@ -86,6 +86,9 @@ angular.module('starter.controllers', ['ngCordova'])
     }
 
     $scope.getFavorites = function(){
+      if($scope.favorites){
+        return;
+      }
       $cordovaFile.checkFile('favorites.txt')
         .then(function (success) {
           $cordovaFile.readAsText('favorites.txt').then(function(result) {

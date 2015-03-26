@@ -1,0 +1,11 @@
+<ion-view view-title="Favorites" cache-view="false" ng-init="getFavorites()">
+  <ion-content>
+    <h1>Favorites</h1>
+    <ion-list>
+      <ion-item ng-repeat="favorite in favorites" href="#/app/stops/{{favorite.i}}?stopName={{favorite.n}}">
+        {{favorite.n}}
+        <ion-option-button class="button-assertive icon-left ion-heart-broken" ng-click="unfavorite(favorite)">Unfavorite</ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
