@@ -1,6 +1,6 @@
 <ion-view view-title="{{stop_name}}" data-ng-init="getStopAndDepartures()">
   <ion-nav-buttons side="right">
-    <a class="button icon-left ion-information-circled button-clear button-dark" ng-click="stopInfo()">Buses to this Route</a>
+    <a class="button icon-left ion-android-bus button-clear button-dark" ng-click="stopInfo()">Buses</a>
   </ion-nav-buttons>
   <ion-content>
     <ion-refresher
@@ -26,6 +26,12 @@
         </ion-item>
       </div>
     </ion-list>
+    <div class="card" ng-if="departures.length==0">
+      <div class="item item-text-wrap">
+        Looks like there are no buses coming soon.
+        <i class="icon ion-android-sad" style="font-size: 32px"></i>
+      </div>
+    </div>
 
   </ion-content>
 </ion-view>
