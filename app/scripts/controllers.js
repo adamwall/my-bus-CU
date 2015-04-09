@@ -45,7 +45,6 @@ angular.module('starter.controllers', ['ngCordova'])
   })
 
   .controller('StopsCtrl', function($scope, $http, $cordovaFile) {
-    $scope.stops = [{"c":"MTD5415","i":"GRNMAT","n":"Green and Mathews"},{"c":"MTD4360","i":"GRNGWN","n":"Green and Goodwin"},{"c":"MTD3336","i":"GRNNEIL","n":"Green and Neil"},{"c":"MTD3617","i":"GRNORCH","n":"Green and Orchard"}];
     $scope.search = function(query){
       $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=' + query).success(function (data){
         $scope.stops = data;
