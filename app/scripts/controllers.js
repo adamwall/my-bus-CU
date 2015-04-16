@@ -1,5 +1,9 @@
 angular.module('starter.controllers', ['ngCordova'])
 
+  .controller('AppCtrl', function($scope) {
+
+  })
+
   .controller('StopsCtrl', function($scope, $http, $cordovaFile) {
     $scope.search = function(query){
       $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=' + query).success(function (data){
@@ -97,7 +101,7 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     $scope.getBusesByRoute = function() {
-      $http.get('https://developer.cumtd.com/api/v2.2/json/GetRoutesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+      $http.get('http://busserve-45451.onmodulus.net/routes/' + $stateParams.stopId).success(function(data) {
         console.log('GetRoutesByStop');
         angular.forEach(data.routes, function(route){
           route.route_text_color = '#'+route.route_text_color;
@@ -114,14 +118,14 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     $scope.getStopInfo = function() {
-      $http.get('https://developer.cumtd.com/api/v2.2/json/GetStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+      $http.get('http://busserve-45451.onmodulus.net/stop/' + $stateParams.stopId).success(function(data) {
         console.log('GetStop');
         $scope.stop = data.stops[0];
       });
     };
 
     $scope.updateDepartures = function() {
-      $http.get('https://developer.cumtd.com/api/v2.2/json/GetDeparturesByStop?key=071ed88917b74528a32f5e635df12f8f&stop_id=' + $stateParams.stopId).success(function(data) {
+      $http.get('http://busserve-45451.onmodulus.net/departures/' + $stateParams.stopId).success(function(data) {
         console.log('GetDeparturesByStop');
         angular.forEach(data.departures, function(departure) {
           if(departure.expected_mins == 0) departure.expected_mins = 'DUE';
@@ -159,7 +163,7 @@ angular.module('starter.controllers', ['ngCordova'])
     //refresh departure list every 60 seconds
     var intervalPromise = $interval(function() {
       $scope.updateDepartures();
-    }, 60000)
+    }, 60000);
 
     $scope.stopUpdate = function() {
         $interval.cancel(intervalPromise);
