@@ -66,6 +66,8 @@
     "com.ionic.keyboard",
     "org.apache.cordova.file",
     "org.apache.cordova.file",
-    "org.apache.cordova.file"
+    "org.apache.cordova.file",
+    "org.apache.cordova.geolocation",
+    "org.apache.cordova.geolocation"
   ]
 }

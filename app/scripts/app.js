@@ -60,6 +60,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       })
 
+      .state('app.gps', {
+        url: "/gps",
+        views: {
+          'menuContent': {
+            templateUrl: "templates/gps.html",
+            controller: 'GPSCtrl'
+          }
+        }
+      })
+
       .state('app.favorites', {
         url: "/favorites",
         views: {

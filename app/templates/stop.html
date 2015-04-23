@@ -19,8 +19,7 @@
         </ion-item>
         <ion-item class="item-accordion"
                   ng-repeat="departure in departures | filter: {stop_id: team}"
-                  ng-show="!isGroupShown(team)"
-                  href="#/app/buses/{{departure.route.route_id}}">
+                  ng-show="!isGroupShown(team)">
           <h2>{{departure.headsign}}</h2>
           <p><small>{{departure.expected_mins}}</small></p>
         </ion-item>

@@ -1,0 +1,16 @@
+<ion-view view-title="Nearest Stops" data-ng-init="getFavorites()">
+  <ion-content>
+    <div class="card" ng-if="message">
+      <div class="item item-text-wrap">
+        {{message}}
+      </div>
+    </div>
+    <ion-list>
+      <ion-item ng-repeat="stop in stops" href="#/app/stops/{{stop.stop_id}}?stopName={{stop.stop_name}}">
+        {{stop.stop_name}}
+        <ion-option-button class="button-positive icon-left ion-heart" ng-click="favorite(stop)" ng-show="functiontofindIndexByKeyValue(favorites,'i', stop.stop_id) == -1"></ion-option-button>
+        <ion-option-button class="button-assertive icon-left ion-heart-broken" ng-click="unfavorite(stop)" ng-show="functiontofindIndexByKeyValue(favorites,'i', stop.stop_id) > -1"></ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

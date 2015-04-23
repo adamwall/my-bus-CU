@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCordova'])
 
-  .controller('AppCtrl', function($scope) {
+  .controller('AppCtrl', function() {
 
   })
 
@@ -17,7 +17,6 @@ angular.module('starter.controllers', ['ngCordova'])
         'i': item.i,
         'n': item.n}
       );
-      $scope.test=JSON.stringify($scope.favorites);
       writeToDisk();
     };
     $scope.unfavorite = function(item){
@@ -39,7 +38,6 @@ angular.module('starter.controllers', ['ngCordova'])
       $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
         //success
       }, function(err) {
-        $scope.test = 'notworked1 ' + JSON.stringify(err);
         // An error occurred. Show a message to the user
       });
     }
@@ -51,14 +49,11 @@ angular.module('starter.controllers', ['ngCordova'])
       $cordovaFile.checkFile('favorites.txt')
         .then(function (success) {
           $cordovaFile.readAsText('favorites.txt').then(function(result) {
-            $scope.test= result;
             $scope.favorites = JSON.parse(result);
           }, function(err) {
-            $scope.test = 'notworked1 ' + JSON.stringify(err);
             $scope.favorites = [];
           });
         }, function (error) {
-          $scope.test = 'notworked001 ' + JSON.stringify(error);
           $scope.favorites=[];
         });
 
@@ -176,3 +171,69 @@ angular.module('starter.controllers', ['ngCordova'])
     });
   })
 //-------------------STOP CONTROLLER END---------------------------------------------------------------
+
+  .controller('GPSCtrl', function($scope, $cordovaGeolocation, $cordovaFile, $http) {
+
+    var posOptions = {timeout: 10000, enableHighAccuracy: false};
+    $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        $http.get('https://developer.cumtd.com/api/v2.2/json/GetStopsByLatLon?key=071ed88917b74528a32f5e635df12f8f&lat='+position.coords.latitude+'&lon='+position.coords.longitude)
+          .success(function(data){
+            $scope.stops = data.stops;
+            $scope.message=null;
+          });
+      }, function(err) {
+        // error
+        $scope.message = 'Error getting coords';
+        console.log(err);
+      });
+
+    $scope.favorite = function(item){
+      $scope.favorites.push(
+        {'c': item.code,
+          'i': item.stop_id,
+          'n': item.stop_name}
+      );
+      writeToDisk();
+    };
+    $scope.unfavorite = function(item){
+      $scope.favorites.splice($scope.functiontofindIndexByKeyValue($scope.favorites,'i', item.i),1);
+      writeToDisk();
+    };
+
+    $scope.functiontofindIndexByKeyValue = function(arraytosearch, key, valuetosearch) {
+      for (var i = 0; i < arraytosearch.length; i++) {
+
+        if (arraytosearch[i][key] == valuetosearch) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+    function writeToDisk(){
+      $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
+        //success
+      }, function(err) {
+        // An error occurred. Show a message to the user
+      });
+    }
+
+    $scope.getFavorites = function(){
+      if($scope.favorites){
+        return;
+      }
+      $cordovaFile.checkFile('favorites.txt')
+        .then(function (success) {
+          $cordovaFile.readAsText('favorites.txt').then(function(result) {
+            $scope.favorites = JSON.parse(result);
+          }, function(err) {
+            $scope.favorites = [];
+          });
+        }, function (error) {
+          $scope.favorites=[];
+        });
+
+    };
+  });
