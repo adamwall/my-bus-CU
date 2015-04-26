@@ -1,0 +1,41 @@
+<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+
+<ion-view view-title="walk">
+  <ion-content scroll="false">
+    <h1>should I walk or ride?</h1>
+
+    <form ng-submit="getWalk(origin, dest)">
+    <div class="list list-inset">
+
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" name="origin" value="" id="autocomplete" placeholder="starting location" ng-model="place.origin" required>
+        </label>
+        <button type="button" class="button button-clear button-dark" ng-click="geolocate()">
+          <i class="icon ion-location"></i>
+        </button>
+      </div>
+
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" name="dest" value="" id="autocomplete2" placeholder="ending location" ng-model="place.dest" required>
+        </label>
+      </div>
+
+    </div>
+    <button type="submit" id="submit" class="button button-full button-balanced">go!</button>
+    </form>
+
+    <div class="card" ng-if="transit_duration && walking_duration">
+      <div class="item item-text-wrap" ng-if="transit_duration<walking_duration">
+        The bus is quicker. (about {{transit_duration/60 | number:0}} minutes)
+      </div>
+      <div class="item item-text-wrap" ng-if="transit_duration>=walking_duration">
+        You should probably walk. (about {{walking_duration/60 | number:0}} minutes)
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

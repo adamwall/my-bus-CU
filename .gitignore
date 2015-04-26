@@ -1,7 +1,7 @@
 node_modules
 www
 .idea
-.temp/styles
+.temp/styles/*
 .sass-cache
 app/bower_components
 coverage

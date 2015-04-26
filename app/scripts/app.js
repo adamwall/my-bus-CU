@@ -70,6 +70,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       })
 
+      .state('app.walk', {
+        url: "/walk",
+        views: {
+          'menuContent': {
+            templateUrl: "templates/walk.html",
+            controller: 'WalkCtrl'
+          }
+        }
+      })
+
       .state('app.favorites', {
         url: "/favorites",
         views: {
@@ -80,5 +90,5 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/favorites');
+    $urlRouterProvider.otherwise('/app/stops');
   });

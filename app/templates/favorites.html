@@ -4,7 +4,7 @@
     <ion-list>
       <ion-item ng-repeat="favorite in favorites" href="#/app/stops/{{favorite.i}}?stopName={{favorite.n}}">
         {{favorite.n}}
-        <ion-option-button class="button-assertive icon-left ion-heart-broken" ng-click="unfavorite(favorite)">Unfavorite</ion-option-button>
+        <ion-option-button class="button-assertive icon-left ion-heart-broken" ng-click="unfavorite(favorite)"></ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>

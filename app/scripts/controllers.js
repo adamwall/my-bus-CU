@@ -4,7 +4,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
   })
 
-  .controller('StopsCtrl', function($scope, $http, $cordovaFile) {
+  .controller('StopsCtrl', function($scope, $http, $cordovaFile, $rootScope) {
     $scope.search = function(query){
       $http.get('http://www.cumtd.com/autocomplete/Stops/v1.0/json/search?query=' + query).success(function (data){
         $scope.stops = data;
@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     $scope.favorite = function(item){
-      $scope.favorites.push(
+      $rootScope.favorites.push(
         {'c': item.c,
         'i': item.i,
         'n': item.n}
@@ -20,7 +20,7 @@ angular.module('starter.controllers', ['ngCordova'])
       writeToDisk();
     };
     $scope.unfavorite = function(item){
-      $scope.favorites.splice($scope.functiontofindIndexByKeyValue($scope.favorites,'i', item.i),1);
+      $rootScope.favorites.splice($scope.functiontofindIndexByKeyValue($rootScope.favorites,'i', item.i),1);
       writeToDisk();
     };
 
@@ -35,28 +35,29 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     function writeToDisk(){
-      $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
+      $cordovaFile.writeFile('favorites.txt', JSON.stringify($rootScope.favorites), true).then(function(result) {
         //success
       }, function(err) {
         // An error occurred. Show a message to the user
       });
     }
 
-    $scope.getFavorites = function(){
-      if($scope.favorites){
+    $rootScope.getFavorites = function(){
+      if($rootScope.favorites && $rootScope.favorites.length>0){
         return;
       }
-      $cordovaFile.checkFile('favorites.txt')
-        .then(function (success) {
-          $cordovaFile.readAsText('favorites.txt').then(function(result) {
-            $scope.favorites = JSON.parse(result);
-          }, function(err) {
-            $scope.favorites = [];
+      else {
+        $cordovaFile.checkFile('favorites.txt')
+          .then(function (success) {
+            $cordovaFile.readAsText('favorites.txt').then(function (result) {
+              $rootScope.favorites = JSON.parse(result);
+            }, function (err) {
+              $rootScope.favorites = [];
+            });
+          }, function (error) {
+            $rootScope.favorites = [];
           });
-        }, function (error) {
-          $scope.favorites=[];
-        });
-
+      }
     };
   })
 
@@ -172,7 +173,7 @@ angular.module('starter.controllers', ['ngCordova'])
   })
 //-------------------STOP CONTROLLER END---------------------------------------------------------------
 
-  .controller('GPSCtrl', function($scope, $cordovaGeolocation, $cordovaFile, $http) {
+  .controller('GPSCtrl', function($scope, $cordovaGeolocation, $cordovaFile, $http, $rootScope) {
 
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $cordovaGeolocation
@@ -190,7 +191,7 @@ angular.module('starter.controllers', ['ngCordova'])
       });
 
     $scope.favorite = function(item){
-      $scope.favorites.push(
+      $rootScope.favorites.push(
         {'c': item.code,
           'i': item.stop_id,
           'n': item.stop_name}
@@ -198,7 +199,7 @@ angular.module('starter.controllers', ['ngCordova'])
       writeToDisk();
     };
     $scope.unfavorite = function(item){
-      $scope.favorites.splice($scope.functiontofindIndexByKeyValue($scope.favorites,'i', item.i),1);
+      $rootScope.favorites.splice($scope.functiontofindIndexByKeyValue($rootScope.favorites,'i', item.i),1);
       writeToDisk();
     };
 
@@ -213,27 +214,89 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     function writeToDisk(){
-      $cordovaFile.writeFile('favorites.txt', JSON.stringify($scope.favorites), true).then(function(result) {
+      $cordovaFile.writeFile('favorites.txt', JSON.stringify($rootScope.favorites), true).then(function(result) {
         //success
       }, function(err) {
         // An error occurred. Show a message to the user
       });
     }
 
-    $scope.getFavorites = function(){
-      if($scope.favorites){
+    $rootScope.getFavorites = function(){
+      if($rootScope.favorites && $rootScope.favorites.length > 0){
         return;
       }
       $cordovaFile.checkFile('favorites.txt')
         .then(function (success) {
           $cordovaFile.readAsText('favorites.txt').then(function(result) {
-            $scope.favorites = JSON.parse(result);
+            $rootScope.favorites = JSON.parse(result);
           }, function(err) {
-            $scope.favorites = [];
+            $rootScope.favorites = [];
           });
         }, function (error) {
-          $scope.favorites=[];
+          $rootScope.favorites=[];
         });
 
     };
+  })
+
+  .controller('WalkCtrl', function($scope, $cordovaGeolocation, $http) {
+    $scope.place = {};
+    var autoComplete = new google.maps.places.Autocomplete(
+      /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
+      {componentRestrictions: {country: 'us'} });
+
+    var autoComplet2 = new google.maps.places.Autocomplete(
+      /** @type {HTMLInputElement} */(document.getElementById('autocomplete2')),
+      {componentRestrictions: {country: 'us'} });
+
+    google.maps.event.addListener(autoComplete, 'place_changed', function() {
+      var place = autoComplete.getPlace();
+      $scope.place.origin = place.geometry.location.k + ', ' + place.geometry.location.D;
+      $scope.$apply();
+    });
+    google.maps.event.addListener(autoComplet2, 'place_changed', function() {
+      var place = autoComplet2.getPlace();
+      $scope.place.dest = place.geometry.location.k + ', ' + place.geometry.location.D;
+      $scope.$apply();
+    });
+
+    var circle = new google.maps.Circle({
+      center: new google.maps.LatLng(40.1105, -88.2284), //UIUC lat long
+      radius: 5
+    });
+    autoComplete.setBounds(circle.getBounds());
+    autoComplet2.setBounds(circle.getBounds());
+
+    $scope.geolocate = function(){
+      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      $cordovaGeolocation
+        .getCurrentPosition(posOptions)
+        .then(function (position) {
+          $scope.place.origin = position.coords.latitude + ', ' + position.coords.longitude;
+          //position.coords.latitude;
+        }, function(err) {
+          // error
+          $scope.message = 'Error getting coords';
+          console.log(err);
+        });
+    };
+
+    $scope.getWalk = function(origin, dest){
+      console.log(autoComplete.getPlace());
+      var from = document.getElementById('autocomplete').value;
+      var to = document.getElementById('autocomplete2').value;
+      $http.get('https://maps.googleapis.com/maps/api/directions/json?mode=transit&transit_mode=bus&key=AIzaSyCiHDJiqaixmuXT6LpSJeIoF3gLN7VLgJM&origin='+from+'&destination='+to)
+        .success(function(data_transit){
+          console.log(data_transit);
+            $scope.transit_duration = data_transit.routes[0].legs[0].duration.value;
+          $http.get('https://maps.googleapis.com/maps/api/directions/json?mode=walking&origin='+from+'&destination='+to)
+            .success(function(data_walk){
+                $scope.walking_duration = data_walk.routes[0].legs[0].duration.value;
+              console.log(data_walk);
+            });
+        });
+
+    }
+
+
   });
