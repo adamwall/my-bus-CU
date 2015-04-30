@@ -5,12 +5,12 @@
   <ion-content scroll="false">
     <h1>should I walk or ride?</h1>
 
-    <form ng-submit="getWalk(origin, dest)">
+    <form ng-submit="getWalk()">
     <div class="list list-inset">
 
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" name="origin" value="" id="autocomplete" placeholder="starting location" ng-model="place.origin" required>
+          <input type="text" name="origin" value="" id="autocomplete" placeholder="starting location" ng-model="origin" required>
         </label>
         <button type="button" class="button button-clear button-dark" ng-click="geolocate()">
           <i class="icon ion-location"></i>
@@ -19,7 +19,7 @@
 
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
-          <input type="text" name="dest" value="" id="autocomplete2" placeholder="ending location" ng-model="place.dest" required>
+          <input type="text" name="dest" value="" id="autocomplete2" placeholder="ending location" required>
         </label>
       </div>
 
@@ -29,7 +29,14 @@
 
     <div class="card" ng-if="transit_duration && walking_duration">
       <div class="item item-text-wrap" ng-if="transit_duration<walking_duration">
-        The bus is quicker. (about {{transit_duration/60 | number:0}} minutes)
+        <h3>The bus is quicker. (about {{transit_duration/60 | number:0}} minutes)</h3>
+        <ion-list>
+          <ion-item ng-repeat="step in transit_directions">
+            <i class="icon ion-android-walk" ng-show="step.icon=='WALK'"></i>
+            <i class="icon ion-android-bus" ng-show="step.icon=='BUS'"></i>
+            {{step.text}}
+          </ion-item>
+        </ion-list>
       </div>
       <div class="item item-text-wrap" ng-if="transit_duration>=walking_duration">
         You should probably walk. (about {{walking_duration/60 | number:0}} minutes)

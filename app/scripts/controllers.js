@@ -251,12 +251,12 @@ angular.module('starter.controllers', ['ngCordova'])
 
     google.maps.event.addListener(autoComplete, 'place_changed', function() {
       var place = autoComplete.getPlace();
-      $scope.place.origin = place.geometry.location.k + ', ' + place.geometry.location.D;
+      $scope.place.origin = place.geometry.location.A + ', ' + place.geometry.location.F;
       $scope.$apply();
     });
     google.maps.event.addListener(autoComplet2, 'place_changed', function() {
       var place = autoComplet2.getPlace();
-      $scope.place.dest = place.geometry.location.k + ', ' + place.geometry.location.D;
+      $scope.place.dest = place.geometry.location.A + ', ' + place.geometry.location.F;
       $scope.$apply();
     });
 
@@ -273,6 +273,7 @@ angular.module('starter.controllers', ['ngCordova'])
         .getCurrentPosition(posOptions)
         .then(function (position) {
           $scope.place.origin = position.coords.latitude + ', ' + position.coords.longitude;
+          $scope.origin = position.coords.latitude + ', ' + position.coords.longitude;
           //position.coords.latitude;
         }, function(err) {
           // error
@@ -281,16 +282,36 @@ angular.module('starter.controllers', ['ngCordova'])
         });
     };
 
-    $scope.getWalk = function(origin, dest){
-      console.log(autoComplete.getPlace());
-      var from = document.getElementById('autocomplete').value;
-      var to = document.getElementById('autocomplete2').value;
+    $scope.getWalk = function(){
+      //var from = document.getElementById('autocomplete').value;
+      //var to = document.getElementById('autocomplete2').value;
+      var from = $scope.place.origin;
+      var to = $scope.place.dest;
+      $scope.transit_directions = [];
       $http.get('https://maps.googleapis.com/maps/api/directions/json?mode=transit&transit_mode=bus&key=AIzaSyCiHDJiqaixmuXT6LpSJeIoF3gLN7VLgJM&origin='+from+'&destination='+to)
         .success(function(data_transit){
           console.log(data_transit);
-            $scope.transit_duration = data_transit.routes[0].legs[0].duration.value;
+          $scope.transit_duration = data_transit.routes[0].legs[0].duration.value;
+          angular.forEach(data_transit.routes[0].legs[0].steps, function(step){
+            console.log(step.html_instructions);
+            if(step.travel_mode == 'TRANSIT'){
+              var transit_depart = {}, transit_arrival = {};
+              var t_d = step.transit_details;
+              transit_depart.icon = 'BUS'; transit_arrival.icon = 'BUS';
+              transit_depart.text = t_d.departure_stop.name + ': Board ' + t_d.line.short_name + ' ' + t_d.line.name + ' ' + t_d.headsign + ' at ' + t_d.departure_time.text;
+              transit_arrival.text = 'Get off at ' + t_d.arrival_stop.name;
+              $scope.transit_directions.push(transit_depart, transit_arrival);
+            }
+            else{
+              var walking = {};
+              walking.text = step.html_instructions;
+              walking.icon = 'WALK';
+              $scope.transit_directions.push(walking);
+            }
+          });
           $http.get('https://maps.googleapis.com/maps/api/directions/json?mode=walking&origin='+from+'&destination='+to)
             .success(function(data_walk){
+              console.log($scope.transit_directions);
                 $scope.walking_duration = data_walk.routes[0].legs[0].duration.value;
               console.log(data_walk);
             });
