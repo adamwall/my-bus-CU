@@ -1,0 +1,15 @@
+<ion-view view-title="Buses">
+  <ion-content>
+    <div class="bar bar-header item-input-inset">
+      <label class="item-input-wrapper">
+        <i class="icon ion-ios7-search placeholder-icon"></i>
+        <input type="search" placeholder="Search" ng-model="query">
+      </label>
+    </div>
+    <ion-list>
+      <ion-item ng-repeat="bus in buses | filter: query | orderBy: 'route_long_name' " href="#/app/buses/{{bus.route_id}}?busName={{bus.route_long_name}}">
+        {{bus.route_short_name}} {{bus.route_long_name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

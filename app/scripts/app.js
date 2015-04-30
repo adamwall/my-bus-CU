@@ -80,6 +80,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       })
 
+      .state('app.buses', {
+        url: "/buses",
+        views: {
+          'menuContent': {
+            templateUrl: "templates/buses.html",
+            controller: 'BusesCtrl'
+          }
+        }
+      })
+
       .state('app.favorites', {
         url: "/favorites",
         views: {

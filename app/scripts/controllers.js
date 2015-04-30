@@ -320,5 +320,11 @@ angular.module('starter.controllers', ['ngCordova'])
 
     }
 
+  })
 
+  .controller('BusesCtrl', function($scope, $http) {
+    $http.get('https://developer.cumtd.com/api/v2.2/json/GetRoutes?key=071ed88917b74528a32f5e635df12f8f')
+      .success(function(data){
+        $scope.buses = data.routes;
+    });
   });
