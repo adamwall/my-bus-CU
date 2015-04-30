@@ -90,6 +90,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       })
 
+      .state('app.bus', {
+        url: "/buses/:busId?busName",
+        views: {
+          'menuContent': {
+            templateUrl: "templates/bus.html",
+            controller: 'BusCtrl'
+          }
+        }
+      })
+
       .state('app.favorites', {
         url: "/favorites",
         views: {

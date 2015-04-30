@@ -327,4 +327,23 @@ angular.module('starter.controllers', ['ngCordova'])
       .success(function(data){
         $scope.buses = data.routes;
     });
-  });
+
+
+  })
+
+  .controller('BusCtrl', function($scope, $http, $stateParams) {
+    $scope.bus_name = $stateParams.busName;
+    $http.get('https://developer.cumtd.com/api/v2.2/json/GetTripsByRoute?key=071ed88917b74528a32f5e635df12f8f&route_id=' + $stateParams.busId)
+      .success(function(trips){
+        var trip_id = trips.trips[0].trip_id;
+        $http.get('https://developer.cumtd.com/api/v2.2/json/GetStopTimesByTrip?key=071ed88917b74528a32f5e635df12f8f&trip_id=' + trip_id)
+          .success(function(stops){
+            $scope.stops = stops.stop_times;
+            console.log($scope.stops);
+          })
+      });
+  })
+
+  .filter('encodeURIComponent', function() {
+  return window.encodeURIComponent;
+});;
