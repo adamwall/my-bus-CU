@@ -312,7 +312,8 @@ angular.module('starter.controllers', ['ngCordova'])
           $http.get('https://maps.googleapis.com/maps/api/directions/json?mode=walking&origin='+from+'&destination='+to)
             .success(function(data_walk){
               console.log($scope.transit_directions);
-                $scope.walking_duration = data_walk.routes[0].legs[0].duration.value;
+              $scope.walking_duration = data_walk.routes[0].legs[0].duration.value;
+              $scope.walking_directions = data_walk.routes[0].legs[0].steps;
               console.log(data_walk);
             });
         });

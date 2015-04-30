@@ -39,7 +39,13 @@
         </ion-list>
       </div>
       <div class="item item-text-wrap" ng-if="transit_duration>=walking_duration">
-        You should probably walk. (about {{walking_duration/60 | number:0}} minutes)
+        <h3>You should probably walk. (about {{walking_duration/60 | number:0}} minutes)</h3>
+        <ion-list>
+          <ion-item ng-repeat="step in walking_directions">
+            <i class="icon ion-android-walk"></i>
+            <span ng-bind-html="step.html_instructions"></span>
+          </ion-item>
+        </ion-list>
       </div>
     </div>
 
