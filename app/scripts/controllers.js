@@ -97,7 +97,7 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     $scope.getBusesByRoute = function() {
-      $http.get('http://busserve-45451.onmodulus.net/routes/' + $stateParams.stopId).success(function(data) {
+      $http.get('http://bus-serve.herokuapp.com/routes/' + $stateParams.stopId).success(function(data) {
         console.log('GetRoutesByStop');
         angular.forEach(data.routes, function(route){
           route.route_text_color = '#'+route.route_text_color;
@@ -114,14 +114,14 @@ angular.module('starter.controllers', ['ngCordova'])
     };
 
     $scope.getStopInfo = function() {
-      $http.get('http://busserve-45451.onmodulus.net/stop/' + $stateParams.stopId).success(function(data) {
+      $http.get('http://bus-serve.herokuapp.com/stop/' + $stateParams.stopId).success(function(data) {
         console.log('GetStop');
         $scope.stop = data.stops[0];
       });
     };
 
     $scope.updateDepartures = function() {
-      $http.get('http://busserve-45451.onmodulus.net/departures/' + $stateParams.stopId).success(function(data) {
+      $http.get('http://bus-serve.herokuapp.com/departures/' + $stateParams.stopId).success(function(data) {
         console.log('GetDeparturesByStop');
         angular.forEach(data.departures, function(departure) {
           if(departure.expected_mins == 0) departure.expected_mins = 'DUE';
